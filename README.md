@@ -2,7 +2,7 @@
 ### Description updated on: April 23, 2025
 Sample data for testing is in [this Drive folder](https://drive.google.com/drive/folders/1Q0sSf-hAkc6ddCoGbM362aZyqzWDu1f2?usp=sharing)
 
-#### Summary
+### Summary
 Through this initiative, we can calculate proximity zones and intersection strength for parcels with *features of interest*. Specific examples include:
 
 1. Parcels that are 5, 50, 100, 500 meters away from a railway or a transmission line. In this case, the *feature of interest* would be a railway or a transmission line.
@@ -10,7 +10,7 @@ Through this initiative, we can calculate proximity zones and intersection stren
 
 The hypothesized application of this product is in *site selection*. Proximity and intersection to certain *features of interest* can be useful signals to prioritize or discard regions while exploring potential sites. 
 
-#### POC Scope
+### POC Scope
 Scope for this POC can be defined along three dimensions: *features of interest*, *geospatial analysis* and *coverage*. Details for each are mentioned below:
 
 1. **Features of interest**: We're using the following 5 features in the POC:
@@ -37,7 +37,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
     * '35051': 'NM',  # Sierra County, NM
     * '17127': 'IL',  # Massac County, IL
 
-#### Testing the Results and Workflow
+### Testing: Results, Workflow and Calculations
 
 **Testing Results**
 The folder [*sample_data*](https://drive.google.com/drive/folders/1Q0sSf-hAkc6ddCoGbM362aZyqzWDu1f2?usp=sharing) contains parquet files for 5 counties:
@@ -51,14 +51,53 @@ The folder [*sample_data*](https://drive.google.com/drive/folders/1Q0sSf-hAkc6dd
 Each county has a merged parquet file and a parquet for each encumbrance type. These can be loaded into QGIS for validation and quick overview.
 
 **Testing Workflow**
-The curious mind can also test the workflow and/or play around with underlying parameters such as buffer distances or intersection weight calculations. This can be done for two counties: Warren, MO (fips 29181) and Berks, PA (fips 42011), and needs interaction with just two files: *poc_tested_modules.py* and *poc_county_encumbrances.py*. Below are step by step instructions:
+The curious mind can also test the workflow and/or play around with underlying parameters such as buffer distances or intersection weight calculations. This can be done for two counties: **Warren, MO (fips 29181) and Berks, PA (fips 42011)**, and needs interaction with just two files: *poc_tested_modules.py* and *poc_county_encumbrances.py*. Below are step by step instructions:
 
 1. Clone the github repository
-2. *Changing filepaths:* In the file *poc_tested_modules.py*, replace the path for the variable `PARQUET_FOLDER`
-3. *Running county workflow*: Run the python script in the terminal with a specific *fips* and *encumberances separated by spaces*. For example, if I wanted to check roadways and wetlands results for Warren County (29181), I would do:
+2. *Changing filepaths:* In the file *poc_tested_modules.py*, replace the path for the variable `PARQUET_FOLDER` to the path of `ingestion_parquets` in your local.
+3. *Transferring data from Drive*: Copy the contents of `ingestion_parquets`in [this Drive link](https://drive.google.com/drive/folders/1DnO9B_0cxOUjdCB7LD0VObIKnt0b5ZV_?usp=sharing) to your local folder mentioned in step 1.
+4. *Running county workflow*: Run the python script in the terminal with a specific *fips* and *encumberances separated by spaces*. For example, if I wanted to check roadways and wetlands results for Warren County (29181), I would do:
 `...poc_county_encumbrances.py 29181 roadways wetlands` and press enter. This would save a parquet file in the repo that can be analyzed in QGIS along with encumbrance files saved in `ingestion_parquets`.
- 
 
+5. *Testing Calculations:* The majority of work in this workflow is happening in two functions in the file `poc_tested_modules.py`. The first uses buffer distances to assign proximity labels, and the second assigns weights and thresholds to intersection metrics to calculate an intersection/encumbrance score. 
+```
+# Define buffer distances and scores based on polygon or line geometry
+def buffer_scores_and_labels(
+        encumbrance: EncumbranceType):
+    '''
+    Define buffer distances and score labels based on encumbrance type.
+    '''
+```
+and 
 
+```
+# Function to calculate intersection strength score
+def calculate_intersection_score(
+        encumbrance:EncumbranceType,
+        gdf_parcel: gpd.GeoDataFrame,
+        *,
+        area_ratio_weight: float = 0.5,
+        dist_weight: float = 0.3,
+        n_intersections_weight: float = 0.2,
+        area_ratio_thresholds: tuple = (0.4, 0.9),
+        dist_thresholds: tuple = (100, 50, 10, 0),
+        n_intersections_thresholds: tuple = (2 ,3),
+        score_thresholds: tuple = (0.35, 0.7)
+    ) -> gpd.GeoDataFrame:
+        '''
+    Calculates intersection strength score for a given encumbrance using:
+    - Area ratio
+    - Centroid distance
+    - Number of intersections
+    
+    Accepts tunable weights and thresholds via kwargs.
 
-#### Underlying Process
+    Returns:
+    GeoDataFrame with a new 'intersection_score_{encumbrance}' column.
+```
+After playing around with buffer distances and/or intersection score thresholds, a user should save the script and follow steps 1-4 above.
+
+#### Underlying Workflow
+The overall workflow is summarized in this diagram:
+![Encumbrance Workflow](docs\analysis_workflow.PNG)
+
