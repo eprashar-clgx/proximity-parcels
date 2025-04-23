@@ -99,5 +99,5 @@ After playing around with buffer distances and/or intersection score thresholds,
 
 #### Underlying Workflow
 The overall workflow is summarized in this diagram:
-![Encumbrance Workflow](docs\analysis_workflow.PNG)
+![Encumbrance Workflow](docs/analysis_workflow.PNG)
 
