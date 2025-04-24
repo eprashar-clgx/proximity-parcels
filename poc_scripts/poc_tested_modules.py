@@ -373,7 +373,7 @@ def calculate_intersection_score(
     # Score number of intersections
     nint_col = f'n_{encumbrance}_intersections'
     parcels_mod[f'score_nint_{encumbrance}'] = parcels_mod[nint_col].apply(
-        lambda x: 1 if x >= nint_high else (0.5 if x == nint_med else 0.25)
+        lambda x: 1 if x >= nint_high else (0.5 if x == nint_med else 0.25 if x > 0 else 0)
     )
 
     # Final weighted score
@@ -397,18 +397,18 @@ def calculate_intersection_score(
     label_col = f'intersection_label_{encumbrance}'
 
     parcels_mod[label_col] = parcels_mod.apply(
-        lambda row: 'high' if (
+    lambda row: None if row[score_col] == 0 else (
+        'high' if (
             row[ar_col] >= ar_high 
-            or row[dist_col] == dist_overwrite  # distance overwrite value is zero
-            # or row[nint_col] > nint_high
+            or row[dist_col] == dist_overwrite
         ) else (
             'low' if row[score_col] < low_thres else
             'medium' if row[score_col] < high_thres else
             'high'
-        ),
-        axis=1
-    )
+        )
+    ),
+    axis=1
+)
+
     print(f'Intersection scoring completed for {encumbrance}!')
-    print(f'Counts of intersection scores are...')
-    print(f'{parcels_mod[label_col].value_counts()}')
     return parcels_mod
