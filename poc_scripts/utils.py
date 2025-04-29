@@ -56,7 +56,7 @@ def check_and_authenticate(json_path):
                 check_interval = 2  # seconds
                 start_time = datetime.now()
 
-                while datetime.now() - start_time < max_wait:
+                while (datetime.now() - start_time).total_seconds() < max_wait:
                     new_mod_time = datetime.fromtimestamp(os.path.getmtime(json_path))
                     if new_mod_time > file_mod_time:
                         print("Authentication confirmed! Credentials file updated.")
