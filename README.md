@@ -64,32 +64,36 @@ Scope for this POC can be defined along three dimensions: *features of interest*
     **Intersection score, calculated through this equation could be *high* (>0.7), *medium* (0.35-0.7) or *low* (0-0.35).** 
     
     The underlying weights and thresholds to calculate the score are below:
-        * **Weights:** 
-            | Metric | Weight |
-            | ------ | ------- |
-            | Area overlap                               | 0.5 |
-            | Parcel centroid distance from encumbrance  | 0.3  |             
-            | Number of intersections                    | 0.2  |
-        * **Thresholds:**
-            | Metric | Range | Category Weight | Signal Strength |
-            | ------ | --------|------------------|--------------|
-            | Area overlap        | 0.9-1         | 1     | Strongest |
-            | Area overlap        | 0.4-0.9       | 0.5   | Strong  |
-            | Area overlap        | 0-0.0.4       | 0.25  | Weak    | 
-            | Centroid Distance   | 0-10 metres   | 1     | Strongest |
-            | Centroid Distance   | 10-50 metres  | 0.5   | Strong |
-            | Centroid Distance   | 50-100 metres | 0.25  | Weak |
-            | Centroid Distance   | >100 metres   | 0.15  | Very Weak |
-            | # Intersections     | >=3           | 1     | Strongest |
-            | # Intersections     | 2             | 0.5   | Strong |
-            | # Intersections     | 1             | 0.25  | Base case |
+
+    * **Weights:**
+
+        | Metric                                      | Weight |
+        | :------------------------------------------ | :----- |
+        | Area overlap                                | 0.5    |
+        | Parcel centroid distance from encumbrance    | 0.3    |
+        | Number of intersections                      | 0.2    |
+
+    * **Thresholds:**
+
+        | Metric              | Range         | Category Weight | Signal Strength |
+        | :------------------ | :------------ | :-------------- | :-------------- |
+        | Area overlap        | 0.9-1         | 1               | Strongest       |
+        | Area overlap        | 0.4-0.9       | 0.5             | Strong          |
+        | Area overlap        | 0-0.4         | 0.25            | Weak            |
+        | Centroid Distance   | 0-10 metres   | 1               | Strongest       |
+        | Centroid Distance   | 10-50 metres  | 0.5             | Strong          |
+        | Centroid Distance   | 50-100 metres | 0.25            | Weak            |
+        | Centroid Distance   | >100 metres   | 0.15            | Very Weak       |
+        | # Intersections     | >=3           | 1               | Strongest       |
+        | # Intersections     | 2             | 0.5             | Strong          |
+        | # Intersections     | 1             | 0.25            | Base case       |
 
     * **Over-write conditions:** In two cases, the label *high* is assigned even when the overall score may not be >0.75. The conditions are mentioned below:
-            | Metric | Over-write criteria | Assigned Label | Rationale |
-            | ------ | -------------------|----------------|-----------|
-            | Area overlap      | >=0.9   | High           | If >90% of parcel area is covered by encumbrance, encumbrance score should be high |
-            | Centroid distance | 0       | High           | If an encumbrance passes through the parcel centre, encumbrance score should be high |
 
+    | Metric            | Over-write criteria | Assigned Label | Rationale                                                                                                |
+    | :---------------- | :------------------ | :------------- | :------------------------------------------------------------------------------------------------------- |
+    | Area overlap      | >=0.9               | High           | If >90% of parcel area is covered by encumbrance, encumbrance score should be high   |
+    | Centroid distance | 0                   | High           | If an encumbrance passes through the parcel centre, encumbrance score should be high |
 
 3. **Coverage**: This POC covers the following 9 counties:
     * '17031': 'IL',  # Cook County, IL
