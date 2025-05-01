@@ -22,7 +22,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
 
 2. **Geospatial Analysis**: Out of the five features mentioned above, the first three are treated as buffered geometries for proximity analysis while the last two also have an intersection strength calculation on top. Key points:
     * Proximity thresholds can be defined separately for each feature of interest; for example, a proximity of 50 meteres may be very high for railways, but not so for wetlands. The thresholds in the current logic are:
-        * For railways and transmission lines:
+        * For **railways and transmission lines**:
             | Distance (metres) | Label |
             | ----------------- | ------- |
             | 5    | Intersects |
@@ -30,7 +30,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
             | 300  | High       |
             | 750  | Medium     |
             | 1000 | Low        |
-        * For roadways, distances are lower because anything more than a 100 metres away from a road matters less than a railway or transmission line less than 100 metres away:
+        * For **roadways**, distances are lower because anything more than a 100 metres away from a road matters less than a railway or transmission line less than 100 metres away:
             | Distance (metres) | Label |
             | ----------------- | ------- |
             | 5   | Intersects |
@@ -38,7 +38,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
             | 25  | High       |
             | 50  | Medium     |
             | 100 | Low        |
-        * For wetlands and protected lands, we don't need to apply a buffer in the base case *intersects*:
+        * For **wetlands and protected lands**, we don't need to apply a buffer in the base case *intersects*:
             | Distance (metres) | Label |
             | ----------------- | ------- |
             | 0   | Intersects |
@@ -49,7 +49,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
 
     * In addition, the number of thresholds can also be defined so long as a label is associated with the numeric threshold. For example, a new threshold of 200 meters can be added with a small tweak in the code, but the label corresponding to this distance also needs to be defined.
     * Intersection strength is currently calculated only for polygon geometries (wetlands and protected lands). This is because while testing, intersection strength for lines didn't seem to add any interpretable value addition on top of proximity. 
-    * Intersection strength is calculated using three metrics: *intersected geometry area as a percentage of parcel area*, *distance of parcel centroid from nearest edge of intersected feature* and *number of intersections*. These are mentioned in descending order of their contribution to the intersection score. Weights and thresholds are static, and can be tweaked with a minor change in code. The strength calculation uses a simple weighted scoring approach like so:
+    * Intersection strength is calculated using three metrics: *intersected geometry area as a percentage of parcel area*, *distance of parcel centroid from nearest edge of intersected feature* and *number of intersections*. These are mentioned in descending order of their contribution to the intersection score. Weights and thresholds are static, and can be tweaked with a minor change in code. The strength calculation uses a simple **weighted scoring approach** like so:
     ```
     S_final = (S_ar * W_ar) + (S_dist * W_dist) + (S_nint * W_nint)
     Where:
@@ -61,32 +61,34 @@ Scope for this POC can be defined along three dimensions: *features of interest*
         * S_nint = Score related to the number of intersections
         * W_nint = Weight of the number of intersections score
     ```
-    Intersection score, calculated through this equation could be *high* (>0.7), *medium* (0.35-0.7) or *low* (0-0.35). The underlying weights and thresholds to calculate the score are below:
+    **Intersection score, calculated through this equation could be *high* (>0.7), *medium* (0.35-0.7) or *low* (0-0.35).** 
+    
+    The underlying weights and thresholds to calculate the score are below:
         * **Weights:** 
             | Metric | Weight |
             | ------ | ------- |
-            | Area overlap   | 0.5 |
+            | Area overlap                               | 0.5 |
             | Parcel centroid distance from encumbrance  | 0.3  |             
-            | Number of intersections  | 0.2  |
+            | Number of intersections                    | 0.2  |
         * **Thresholds:**
             | Metric | Range | Category Weight | Signal Strength |
             | ------ | --------|------------------|--------------|
-            | Area overlap   | 0.9-1 | 1          | Strongest    |
-            | Area overlap   | 0.4-0.9 | 0.5      | Strong  |
-            | Area overlap   | 0-0.0.4 | 0.25     | Weak    | 
-            | Centroid Distance   | 0-10 metres | 1  | Strongest |
-            | Centroid Distance   | 10-50 metres | 0.5  | Strong |
+            | Area overlap        | 0.9-1         | 1     | Strongest |
+            | Area overlap        | 0.4-0.9       | 0.5   | Strong  |
+            | Area overlap        | 0-0.0.4       | 0.25  | Weak    | 
+            | Centroid Distance   | 0-10 metres   | 1     | Strongest |
+            | Centroid Distance   | 10-50 metres  | 0.5   | Strong |
             | Centroid Distance   | 50-100 metres | 0.25  | Weak |
-            | Centroid Distance   | >100 metres | 0.15  | Very Weak |
-            | # Intersections   | >=3 | 1  | Strongest |
-            | # Intersections   | 2 | 0.5  | Strong |
-            | # Intersections   | 1 | 0.25  | Base case |
+            | Centroid Distance   | >100 metres   | 0.15  | Very Weak |
+            | # Intersections     | >=3           | 1     | Strongest |
+            | # Intersections     | 2             | 0.5   | Strong |
+            | # Intersections     | 1             | 0.25  | Base case |
 
     * **Over-write conditions:** In two cases, the label *high* is assigned even when the overall score may not be >0.75. The conditions are mentioned below:
             | Metric | Over-write criteria | Assigned Label | Rationale |
             | ------ | -------------------|----------------|-----------|
-            | Area overlap | >=0.9        | High           | If >90% of parcel area is covered by encumbrance, encumbrance score should be high |
-            | Centroid distance | 0       | High          | If an encumbrance passes through the parcel centre, encumbrance score should be high |
+            | Area overlap      | >=0.9   | High           | If >90% of parcel area is covered by encumbrance, encumbrance score should be high |
+            | Centroid distance | 0       | High           | If an encumbrance passes through the parcel centre, encumbrance score should be high |
 
 
 3. **Coverage**: This POC covers the following 9 counties:
