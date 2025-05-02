@@ -2,3 +2,4 @@
 /ingestion_parquets
 # Ignore Python cache directories
 __pycache__/
+/poc_scripts/logs
