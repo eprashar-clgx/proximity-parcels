@@ -3,3 +3,4 @@
 # Ignore Python cache directories
 __pycache__/
 /poc_scripts/logs
+/poc_scripts/temp_ingestion.py
