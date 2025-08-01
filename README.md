@@ -16,7 +16,7 @@ Scope for this POC can be defined along three dimensions: *features of interest*
 1. **Features of interest**: We're using the following 5 features in the POC:
     * Railways: Sourced from [US DOT Bureau of Transportation Statistics' North American Rail Network Lines](https://geodata.bts.gov/datasets/usdot::north-american-rail-network-lines/about)
     * Roadways: Sourced from [US DOT Bureau of Transportation Statistics' North American Roads](https://geodata.bts.gov/datasets/usdot::north-american-roads/about)
-    * Transmission Lines: Sourced from [Department of Homeland Security's HIFLD Database]()
+    * Transmission Lines: Sourced from [Department of Homeland Security's HIFLD Database](https://hifld-geoplatform.hub.arcgis.com/datasets/geoplatform::transmission-lines-1/about)
     * Wetlands: Sourced from [US Department of Fisheries and Wildlife Services](https://www.fws.gov/program/national-wetlands-inventory/download-state-wetlands-data)
     * Protected Lands: Sourced from [US Geological Survey](https://www.sciencebase.gov/catalog/item/6759abcfd34edfeb8710a004) 
 
