@@ -25,6 +25,8 @@ PROJECT = 'clgx-gis-app-dev-06e3'
 DATASET = 'property'
 TABLE =  'spatialrecord_polygon'
 CREDENTIALS_PATH =  r"C:\Users\eprashar\AppData\Roaming\gcloud\application_default_credentials.json"
+# A smaller number creates more, smaller polygons. 0.1 is a good starting point.
+GRID_CELL_SIZE = 0.1
 
 
 # Functions to check authentication key
@@ -97,3 +99,66 @@ def read_bigquery_to_gdf(project, dataset, table, query=None, output= 'df', geom
         return gdf
     else:
         return df 
+
+
+#  SUBDIVISION FUNCTION
+
+def subdivide_large_geometries(file_path):
+    """
+    Reads a GeoParquet file, subdivides its geometries using a grid,
+    and saves the result to a new file.
+    """
+    print(f"--- Starting Subdivision for: {os.path.basename(file_path)} ---")
+    
+    # --- 1. Load the County-Level Parquet File ---
+    try:
+        print("Step 1: Loading data into GeoDataFrame...")
+        # Read the Parquet file into a pandas DataFrame first
+        df = pd.read_parquet(file_path)
+        
+        # Convert the WKB 'geometry' column into actual shapely objects
+        # This is the step that will require the most memory.
+        gdf = gpd.GeoDataFrame(
+            df, 
+            geometry=gpd.GeoSeries.from_wkb(df['geometry']), 
+            crs="EPSG:4326"
+        )
+        print(f"-> Successfully loaded {len(gdf):,} features.")
+    except Exception as e:
+        print(f"-> ERROR: Failed to load file. It might be too large for memory. Error: {e}")
+        return
+
+    # --- 2. Create a Subdivision Grid ---
+    print(f"Step 2: Creating a subdivision grid with cell size {GRID_CELL_SIZE} degrees...")
+    
+    # Get the total geographic extent of all features in the file
+    minx, miny, maxx, maxy = gdf.total_bounds
+    
+    # Create a grid of square polygons that covers the entire extent
+    grid_cells = []
+    for x in np.arange(minx, maxx, GRID_CELL_SIZE):
+        for y in np.arange(miny, maxy, GRID_CELL_SIZE):
+            grid_cells.append(box(x, y, x + GRID_CELL_SIZE, y + GRID_CELL_SIZE))
+    
+    grid_gdf = gpd.GeoDataFrame(geometry=grid_cells, crs="EPSG:4326")
+    print(f"-> Created a grid with {len(grid_gdf)} cells.")
+
+    # --- 3. Perform the Intersection (Clipping) ---
+    print("Step 3: Clipping original geometries against the grid...")
+    # The 'overlay' function with 'intersection' is the core of this process.
+    # It finds the overlapping area between the wetlands and the grid cells.
+    subdivided_gdf = gdf.overlay(grid_gdf, how='intersection')
+    print(f"-> Original {len(gdf):,} features were subdivided into {len(subdivided_gdf):,} smaller features.")
+
+    # --- 4. Save the Subdivided Data ---
+    # Convert the geometry back to WKB for efficient storage
+    subdivided_gdf['geometry'] = subdivided_gdf['geometry'].apply(lambda geom: geom.wkb)
+    
+    # Define the output path
+    output_filename = os.path.basename(file_path).replace(".parquet", "_subdivided.parquet")
+    output_path = os.path.join(WETLAND_COUNTY_FILES, output_filename)
+    
+    print(f"Step 4: Saving subdivided data to: {output_path}")
+    # Save the final result as a standard pandas DataFrame
+    pd.DataFrame(subdivided_gdf).to_parquet(output_path, index=False)
+    print("-> Save complete.")

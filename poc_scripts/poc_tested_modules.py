@@ -15,7 +15,7 @@ from shapely import wkt
 import fiona
 import matplotlib.pyplot as plt
 import seaborn as sns
-import utils
+import nation_wide.utils as utils
 
 # Setup logging
 # TODO: Setup location to save logs and time functions
