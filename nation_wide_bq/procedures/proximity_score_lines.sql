@@ -1,6 +1,6 @@
 -- Procedure to calculate proximity scores for parcels relative to linear encumbrances (roads, railways, transmission lines)
 -- This version processes all data in a single batch without FIPS filtering
-CREATE OR REPLACE PROCEDURE `clgx-gis-app-uat-a0e0.proximity_parcels.calculate_proximity_score_lines_batch`(encumbrance_table STRING, encumbrance_id_col STRING)
+CREATE OR REPLACE PROCEDURE `clgx-gis-app-prd-364d.proximity_parcels.calculate_proximity_score_lines_batch`(encumbrance_table STRING, encumbrance_id_col STRING)
 BEGIN
   -- Constants
   DECLARE final_table_name STRING;
@@ -44,7 +44,7 @@ BEGIN
     sourcedFips, 
     geom, 
     ST_CENTROID(geom) AS centroid
-  FROM `clgx-gis-app-uat-a0e0.proximity_parcels.parcels_mv`;
+  FROM `clgx-gis-app-prd-364d.proximity_parcels.parcels_mv`;
   
   -- Step 3: Pre-calculate aggregate impact metrics for each parcel.
   -- This logic scales perfectly to a full-table batch.
