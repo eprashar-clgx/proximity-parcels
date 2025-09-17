@@ -156,6 +156,6 @@ BEGIN
 END;
 
 -- Example procedure call
-CALL proximity_parcels.calculate_proximity_score_lines_batch('roadways','ID');
-CALL proximity_parcels.calculate_proximity_score_lines_batch('railways', 'FRAARCID');
-CALL proximity_parcels.calculate_proximity_score_lines_batch('transmission_lines','ID');
+--CALL proximity_parcels.calculate_proximity_score_lines_batch('roadways','ID');
+--CALL proximity_parcels.calculate_proximity_score_lines_batch('railways', 'FRAARCID');
+--CALL proximity_parcels.calculate_proximity_score_lines_batch('transmission_lines','ID');

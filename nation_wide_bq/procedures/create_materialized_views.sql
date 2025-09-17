@@ -11,7 +11,7 @@ BEGIN
     SELECT
       * EXCEPT(geometry),
       ST_SIMPLIFY(geometry, 1) AS geom
-    FROM `clgx-idap-bigquery-dev-71f0.edr_ent_property_parcel_polygons.property_parcelpolygon` -- CHANGED THIS TO PROD PROJECT
+    FROM `edr_ent_property_parcel_polygons.property_parcelpolygon_for_proximity` -- CHANGE THIS TO PROD PROJECT if needed `clgx-idap-bigquery-prd-a990.edr_ent_property_parcel_polygons.property_parcelpolygon`
     WHERE ST_GEOMETRYTYPE(geometry) NOT IN ('ST_Point', 'ST_MultiPoint');
 
   -- Create the materialized view for wetlands with conditional buffering
@@ -94,9 +94,9 @@ BEGIN
 END;
 
 -- Procedure calls
-CALL proximity_parcels.create_materialized_view('parcels');
-CALL proximity_parcels.create_materialized_view('roadways');
-CALL proximity_parcels.create_materialized_view('railways');
-CALL proximity_parcels.create_materialized_view('transmission_lines');
-CALL proximity_parcels.create_materialized_view('protected_lands_national');
-CALL proximity_parcels.create_materialized_view('wetlands');
+--CALL proximity_parcels.create_materialized_view('parcels');
+--CALL proximity_parcels.create_materialized_view('roadways');
+--CALL proximity_parcels.create_materialized_view('railways');
+--CALL proximity_parcels.create_materialized_view('transmission_lines');
+--CALL proximity_parcels.create_materialized_view('protected_lands_national');
+--CALL proximity_parcels.create_materialized_view('wetlands');

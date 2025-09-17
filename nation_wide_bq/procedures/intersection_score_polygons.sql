@@ -111,5 +111,5 @@ BEGIN
 END;
 
 -- Example calls to the procedure for different encumbrance types
-CALL proximity_parcels.calculate_intersection_score_polygons_batch('protected_lands_national');
-CALL proximity_parcels.calculate_intersection_score_polygons_batch('wetlands');
+--CALL proximity_parcels.calculate_intersection_score_polygons_batch('protected_lands_national');
+--CALL proximity_parcels.calculate_intersection_score_polygons_batch('wetlands');

@@ -3,6 +3,7 @@
 -- Last updated on Sep 16, 2025 with alias names that match the final schema shared with Ricardo's team
 
 CREATE OR REPLACE PROCEDURE `clgx-gis-app-prd-364d.proximity_parcels.consolidate_all_scores`()
+OPTIONS(strict_mode=false) -- To suppress errors while uploading procedure through console
 BEGIN
 
   CREATE OR REPLACE TABLE `clgx-gis-app-prd-364d.proximity_parcels.all_encumbrance_scores`
@@ -134,4 +135,4 @@ BEGIN
 END;
 
 -- Procedure call
-CALL proximity_parcels.consolidate_all_scores()
+--CALL proximity_parcels.consolidate_all_scores()

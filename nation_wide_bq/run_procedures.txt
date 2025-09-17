@@ -1,0 +1,19 @@
+-- Run procedures one by one
+CALL proximity_parcels.create_materialized_view('parcels');
+CALL proximity_parcels.create_materialized_view('roadways');
+CALL proximity_parcels.create_materialized_view('railways');
+CALL proximity_parcels.create_materialized_view('transmission_lines');
+CALL proximity_parcels.create_materialized_view('protected_lands_national');
+CALL proximity_parcels.create_materialized_view('wetlands');
+
+CALL proximity_parcels.calculate_proximity_score_lines_batch('roadways','ID');
+CALL proximity_parcels.calculate_proximity_score_lines_batch('railways', 'FRAARCID');
+CALL proximity_parcels.calculate_proximity_score_lines_batch('transmission_lines','ID');
+
+CALL proximity_parcels.calculate_proximity_score_polygons_batch('protected_lands_national','ID'); 
+CALL proximity_parcels.calculate_proximity_score_polygons_batch('wetlands','NWI_ID');
+
+CALL proximity_parcels.calculate_intersection_score_polygons_batch('protected_lands_national');
+CALL proximity_parcels.calculate_intersection_score_polygons_batch('wetlands');
+
+CALL proximity_parcels.consolidate_all_scores()

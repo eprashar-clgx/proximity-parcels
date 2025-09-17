@@ -166,5 +166,5 @@ BEGIN
 END;
 
 -- Procedure call
-CALL proximity_parcels.calculate_proximity_score_polygons_batch('protected_lands_national','ID'); -- 1 hour 
-CALL proximity_parcels.calculate_proximity_score_polygons_batch('wetlands','NWI_ID'); -- 7 hours 
+--CALL proximity_parcels.calculate_proximity_score_polygons_batch('protected_lands_national','ID'); -- 1 hour 
+--CALL proximity_parcels.calculate_proximity_score_polygons_batch('wetlands','NWI_ID'); -- 7 hours 
