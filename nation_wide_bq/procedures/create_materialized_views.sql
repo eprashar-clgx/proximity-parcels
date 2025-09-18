@@ -11,7 +11,7 @@ BEGIN
     SELECT
       * EXCEPT(geometry),
       ST_SIMPLIFY(geometry, 1) AS geom
-    FROM `edr_ent_property_parcel_polygons.property_parcelpolygon_for_proximity` -- CHANGE THIS TO PROD PROJECT if needed `clgx-idap-bigquery-prd-a990.edr_ent_property_parcel_polygons.property_parcelpolygon`
+    FROM `clgx-idap-bigquery-prd-a990.edr_ent_property_parcel_polygons.property_parcelpolygon`
     WHERE ST_GEOMETRYTYPE(geometry) NOT IN ('ST_Point', 'ST_MultiPoint');
 
   -- Create the materialized view for wetlands with conditional buffering
