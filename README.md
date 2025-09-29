@@ -13,13 +13,15 @@ Proximity Parcels (v1.0) is a Location Intelligence bulk data product that can b
 Proximity indicators and impact metrics are calculated for each feature layer separately, and are available as a grouping(s). Along with these values, we also provide entity metadata for feature values. Customers can obtain one or more of these groupings based on their needs.
 
 ### Attribution Provided
-[Schema](docs/schema.png)
+![Schema](docs/schema.png)
 
 
 ### Underlying Workflow
 **Ingestion:**
-[Ingestion in python](docs/ingestion.png)
-[Analysis in BQ](docs/analysis.png)
+![Ingestion in python](docs/ingestion.png)
+
+**Analysis:**
+![Analysis in BQ](docs/analysis.png)
 
 
 ### Lower-Level Details:
