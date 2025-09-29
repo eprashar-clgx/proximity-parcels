@@ -2,10 +2,11 @@
 -- This version processes all data in a single batch without FIPS filtering
 -- Last updated on Sep 16, 2025 with alias names that match the final schema shared with Ricardo's team
 
-CREATE OR REPLACE PROCEDURE `clgx-gis-app-uat-a0e0.proximity_parcels.consolidate_all_scores`()
+CREATE OR REPLACE PROCEDURE `clgx-gis-app-prd-364d.proximity_parcels.consolidate_all_scores`()
+OPTIONS(strict_mode=false) -- To suppress errors while uploading procedure through console
 BEGIN
 
-  CREATE OR REPLACE TABLE `clgx-gis-app-uat-a0e0.proximity_parcels.all_encumbrance_scores`
+  CREATE OR REPLACE TABLE `clgx-gis-app-prd-364d.proximity_parcels.all_encumbrance_scores`
   -- Best Practice: Cluster by both fips and geometry for optimal performance in downstream queries.
   CLUSTER BY sourcedFips, geometry AS
 
@@ -96,37 +97,37 @@ BEGIN
     p5.intersection_label AS wetland_intersection_label,
     l5.WETLAND_TYPE AS wetland_type -- Fetched from wetlands_mv
     
-  FROM `clgx-gis-app-uat-a0e0.proximity_parcels.parcels_mv` AS p
+  FROM `clgx-gis-app-prd-364d.proximity_parcels.parcels_mv` AS p
 
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.proximity_intersection_railways` p1
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.proximity_intersection_railways` p1
     ON p.parcelPTID = p1.parcelPTID
 
   -- FIX: Cast the ID column to STRING to match the type of p1.encumbrance_id
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.railways_mv` l1
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.railways_mv` l1
     ON p1.encumbrance_id = CAST(l1.FRAARCID AS STRING)
 
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.proximity_intersection_roadways` p2
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.proximity_intersection_roadways` p2
     ON p.parcelPTID = p2.parcelPTID
   -- FIX: Cast the ID column to STRING to match the type of p2.encumbrance_id
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.roadways_mv` l2
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.roadways_mv` l2
     ON p2.encumbrance_id = CAST(l2.ID AS STRING)
 
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.proximity_intersection_transmission_lines` p3
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.proximity_intersection_transmission_lines` p3
     ON p.parcelPTID = p3.parcelPTID
   -- FIX: Cast the ID column to STRING to match the type of p3.encumbrance_id
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.transmission_lines_mv` l3
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.transmission_lines_mv` l3
     ON p3.encumbrance_id = CAST(l3.ID AS STRING)
 
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.proximity_intersection_protected_lands_national` p4
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.proximity_intersection_protected_lands_national` p4
     ON p.parcelPTID = p4.parcelPTID
   -- This join is likely okay since UUIDs are strings, but casting is a safe practice.
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.protected_lands_national_mv` l4
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.protected_lands_national_mv` l4
     ON p4.encumbrance_id = CAST(l4.ID AS STRING)
 
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.proximity_intersection_wetlands` p5
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.proximity_intersection_wetlands` p5
     ON p.parcelPTID = p5.parcelPTID
   -- FIX: Cast the ID column to STRING to match the type of p5.encumbrance_id
-  LEFT JOIN `clgx-gis-app-uat-a0e0.proximity_parcels.wetlands_mv` l5
+  LEFT JOIN `clgx-gis-app-prd-364d.proximity_parcels.wetlands_mv` l5
     ON p5.encumbrance_id = CAST(l5.NWI_ID AS STRING)
   
   WHERE ST_GEOMETRYTYPE(p.geom) NOT IN ('ST_Point', 'ST_MultiPoint');
@@ -134,4 +135,4 @@ BEGIN
 END;
 
 -- Procedure call
-CALL proximity_parcels.consolidate_all_scores()
+--CALL proximity_parcels.consolidate_all_scores()
