@@ -16,7 +16,11 @@ Proximity indicators and impact metrics are calculated for each feature layer se
 [Schema](docs/schema.png)
 
 
-#### Underlying Workflow
+### Underlying Workflow
 **Ingestion:**
 [Ingestion in python](docs/ingestion.png)
 [Analysis in BQ](docs/analysis.png)
+
+
+### Lower-Level Details:
+

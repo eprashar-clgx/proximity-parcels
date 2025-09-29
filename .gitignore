@@ -5,3 +5,4 @@ __pycache__/
 /poc_scripts/logs
 /poc_scripts/temp_ingestion.py
 /nation_wide/failed_files.log
+/README_ARCHIVE.md
