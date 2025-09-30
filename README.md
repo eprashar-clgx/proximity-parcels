@@ -26,7 +26,7 @@ Out of the five features mentioned above, the first three are line geometries wh
 **Analysis:**
 ![Analysis in BQ](docs/analysis.png)
 
-**Stored Procedures are in *nation_wide_bq/procedures***. To understand the E2W workflow, they need to be run in the following order:
+**Stored Procedures are in *nation_wide_bq/procedures***. For the E2E workflow, they need to be run in the following order:
 1. create_materialized_views.sql
 2. proximity_score_lines.sql
 3. proximity_score_polygons.sql
@@ -34,7 +34,8 @@ Out of the five features mentioned above, the first three are line geometries wh
 5. all_encumbrance_scores.sql
 
 ### Lower-Level Details:
-THESE SHOULD NOT BE SHARED OUTSIDE COTALITY WITHOUT CONSULTING SCIENCE / PRODUCT TEAM MEMBERS.
+**THESE SHOULD NOT BE SHARED OUTSIDE COTALITY WITHOUT CONSULTING SCIENCE / PRODUCT TEAM MEMBERS.**
+
 Proximity thresholds are defined separately for line and polygon geometries. Since this is a bulk product, these can't be changed. The current thresholds are:
 
 * For **major highways, railways and transmission lines**:
