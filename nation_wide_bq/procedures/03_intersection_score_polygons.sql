@@ -1,7 +1,7 @@
 -- Procedure to calculate intersection scores for parcels relative to polygon layers (protected areas, wetlands)
 -- This version processes all data in a single batch without FIPS filtering
 
-CREATE OR REPLACE PROCEDURE `clgx-gis-app-prd-364d.proximity_parcels.calculate_intersection_score_polygons_batch`(encumbrance STRING)
+CREATE OR REPLACE PROCEDURE `clgx-gis-app-dev-06e3.proximity_parcels.calculate_intersection_score_polygons_batch`(encumbrance STRING)
 BEGIN
   -- === Define constants ===
   DECLARE table_name STRING;

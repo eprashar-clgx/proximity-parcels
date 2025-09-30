@@ -1,7 +1,7 @@
 -- Procedure to calculate proximity scores for parcels relative to polygon encumbrances (protected areas, wetlands)
 -- This version processes all data in a single batch without FIPS filtering
 
-CREATE OR REPLACE PROCEDURE `clgx-gis-app-prd-364d.proximity_parcels.calculate_proximity_score_polygons_batch`(encumbrance_table STRING, encumbrance_id_col STRING)
+CREATE OR REPLACE PROCEDURE `clgx-gis-app-dev-06e3.proximity_parcels.calculate_proximity_score_polygons_batch`(encumbrance_table STRING, encumbrance_id_col STRING)
 BEGIN 
   -- Define constants
   DECLARE final_table_name STRING;
